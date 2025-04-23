@@ -12,7 +12,8 @@ in the end i gratefull for you playlist it's
 ## that Task in app.js
 
 i add node_modules in .gitignore file
-when you need to test the app download the code and wirte (i think) npm i than node app.js
+
+# when you need to test the app download the code and wirte (i think) npm i than node app.js
 
 # npm run dev to run task
 # npm run learn to run what i learn from playlist
