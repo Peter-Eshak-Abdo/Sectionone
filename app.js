@@ -84,22 +84,11 @@ app.get("/", (req, res) => {
 // ## GET endpoint fatch all Students from DB
 //localhost:3000/students
 app.get("/students", async (req, res) => {
-  if (students.length === 0) {
-    res.status(404).json({ message: "No students found" });
-    return;
-  }
-  // Add a New Student (Hardcoded)
-  // let newStudent = new studentModle({
-  //   name: "Youssab",
-  //   age: 19,
-  //   phone: "01234567899",
-  //   year: 2,
-  //   id: 374,
-  // }).save();
-  res.status(200).send(students);
+  const students = await StudentModel.find();
+  res.json(students);
 });
 
-// GET endpoint fatch all Doctors from DB
+// ## GET endpoint fatch all Doctors from DB
 //localhost:3000/doctors
 app.get("/doctors", async (req, res) => {
 if (doctors.length === 0) {
@@ -148,15 +137,10 @@ app.put("/doctors/update-name", async (req, res) => {
 });
 
 // ## Delete endpoint to delete student from DB
-app.delete("/students/:id", async (req, res) => {
-  const { id } = req.params;
-  const findStudentIndex = students.findIndex((i)=> i.id === id);
-  if (findStudentIndex === -1) {
-    res.status(404).json({ message: "Student is not found" });
-    return;
-  }
-  students.splice(findStudentIndex, 1);
-  res.status(200).json({ message: `Student ${id} has been deleted successfully` });
+app.delete("/deleteStudent", async (req, res) => {
+  const { name } = req.query;
+  await StudentModel.deleteOne({ name });
+  res.send(`Student with name "${name}" deleted.`);
 });
 
 // ## Fatch all students and doctors from DB
