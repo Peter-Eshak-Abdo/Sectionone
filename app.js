@@ -21,6 +21,7 @@ const studentSchema = new mongoose.Schema({
   year: Number,
   id: Number,
 });
+//convert schema --> model(class)
 let studentModle = new mongoose.model("students", studentSchema);
 
 const doctorSchema = new mongoose.Schema({
@@ -33,6 +34,20 @@ let doctorModle = new mongoose.model("doctors", doctorSchema);
 
 let students = [
   new studentModle({
+    name: "roaa",
+    age: 19,
+    phone: "01234567891",
+    year: 2,
+    id: 284,
+  }),
+  new studentModle({
+    name: "haneen",
+    age: 19,
+    phone: "01234567892",
+    year: 2,
+    id: 124,
+  }),
+  new studentModle({
     name: "Peter",
     age: 19,
     phone: "01234567890",
@@ -40,20 +55,27 @@ let students = [
     id: 97,
   }),
   new studentModle({
-    name: "Maher",
+    name: "duha",
     age: 19,
-    phone: "01234567891",
+    phone: "01234567892",
     year: 2,
-    id: 284,
+    id: 124,
   }),
   new studentModle({
-    name: "John",
+    name: "osama",
     age: 19,
     phone: "01234567892",
     year: 2,
     id: 124,
   }),
 ];
+students.forEach((student) => {
+  student
+    .save()
+    .then(() => console.log(`Saved student: ${student.name}`))
+    .catch((err) => console.log("Save error:", err));
+});
+
 // let students = [];
 let doctors = [
   new doctorModle({
@@ -75,23 +97,31 @@ let doctors = [
     subject: "ODE",
   }),
 ];
+doctors.forEach((doctor) => {
+  doctor
+    .save()
+    .then(() => console.log(`Saved doc: ${doctor.name}`))
+    .catch((err) => console.log("Save error:", err));
+});
 
 //localhost:3000/
 app.get("/", (req, res) => {
-  res.send("Hello from Tofa7a ,Welcome to my API ,You can use the following endpoints: /students  /doctors  /all  /add-doctor  /doctors/update-name");
-})
+  res.send(
+    "Hi ,Welcome to my API ,You can use the following endpoints: /students  /doctors  /all  /add-doctor  /doctors/update-name"
+  );
+});
 
 // ## GET endpoint fatch all Students from DB
 //localhost:3000/students
 app.get("/students", async (req, res) => {
-  const students = await StudentModel.find();
+  const students = await studentModle.find();
   res.json(students);
 });
 
 // ## GET endpoint fatch all Doctors from DB
 //localhost:3000/doctors
 app.get("/doctors", async (req, res) => {
-if (doctors.length === 0) {
+  if (doctors.length === 0) {
     res.status(404).json({ message: "No doctors found" });
     return;
   }
@@ -115,12 +145,28 @@ app.post("/students", async (req, res) => {
   // ## Add a New Student (From Request Body)
   const student = req.body;
   students.push(student);
-  const findStudent = students.find((i) =>i&& i.id === student.id);
+  const findStudent = students.find((i) => i && i.id === student.id);
   if (findStudent) {
     res.status(400).json({ message: "Student already exists" });
     return;
   }
   res.status(201).send("Student added successfully");
+});
+
+//Add a New Student (Hardcoded):
+app.post("/add-student", async (req, res) => {
+  let student = new stdModel({
+    name: "FOLAN Alfolani",
+    age: 20,
+    phone: "01123456789",
+    year: 3,
+    id: 200,
+  }).save();
+  let newstd = await stdModel.find();
+  res.status(201).json({
+    message: "Student has been created",
+    students: newstd,
+  });
 });
 
 // ## Update Doctor Name
@@ -132,14 +178,15 @@ app.put("/doctors/update-name", async (req, res) => {
     { name: newName },
     { new: true }
   );
-  if (!updatedDoctor) return res.status(404).json({ message: "Doctor is not found" });
+  if (!updatedDoctor)
+    return res.status(404).json({ message: "Doctor is not found" });
   res.status(200).json(updatedDoctor);
 });
 
 // ## Delete endpoint to delete student from DB
 app.delete("/deleteStudent", async (req, res) => {
   const { name } = req.query;
-  await StudentModel.deleteOne({ name });
+  await studentModle.deleteOne({ name });
   res.send(`Student with name "${name}" deleted.`);
 });
 
@@ -151,4 +198,4 @@ app.get("/all", async (req, res) => {
   res.status(200).json({ allStudents, allDoctors });
 });
 
-app.listen(3000, () => console.log("Server now is running on port 3000"));
+app.listen(3001, () => console.log("Server now is running on port 3001"));
