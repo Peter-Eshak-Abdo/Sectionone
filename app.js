@@ -1,18 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const db = require("./db");
 let app = express();
 app.use(express.json());
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect("mongodb://localhost:27017/collage");
-    console.log("MongoDB connected");
-  } catch (error) {
-    console.error("MongoDB connection error:", error);
-    process.exit(1);
-  }
-};
-connectDB();
+// const connectDB = async () => {
+//   try {
+//     await mongoose.connect("mongodb://localhost:27017/collage");
+//     console.log("MongoDB connected");
+//   } catch (error) {
+//     console.error("MongoDB connection error:", error);
+//     process.exit(1);
+//   }
+// };
+// connectDB();
 
 const studentSchema = new mongoose.Schema({
   name: String,
